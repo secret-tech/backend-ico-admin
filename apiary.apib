@@ -1,0 +1,360 @@
+FORMAT: 1A
+HOST: http://ico-admin:3000/
+
+# secret_tech ICO admin backend
+
+Almost all operations require 2-factor Authentication.
+To fulfill this requirement most of them are split to 2 endpoints: first (e.g. /user/login/initiate)
+initiates login and generates JWT token. Next this token must be verified using endpoint /user/login/verify.
+
+# Group User
+
+## User login [/login]
+
+### User login [POST]
+
++ email: `test@test.com` (required, string)
++ password: `passwordA6` (required, string)
+
++ Request
+
+    + Headers
+
+            Accept: application/json
+
++ Response 200 (application/json)
+
+        {
+            "accessToken": "jwt_token"
+        }
+
+# Group Investors
+
+## Investors [/investors]
+
+### Get list [GET]
+
++ Request
+
+    + Headers
+
+            Authorization: Bearer token
+            Accept: application/json
+
++ Response 200 (application/json)
+
+        {
+            [
+                {
+                    "investorId": "5b25c7fe5adfac08e2fefa75",
+                    "email": "existing@test.com",
+                    "name": "ICO investor",
+                    "firstName": "ICO",
+                    "lastName": "investor",
+                    "country": "Russia",
+                    "dob": "1990-10-25",
+                    "phone": "+7-999-999-99-99",
+                    "ethAddress": "0xdb369b56BA7b07cF287f611Fbf0DAA4A8a4C2751",
+                    "kycStatus": "Not verified",
+                    "amountDeposited": 5,
+                    "amountInvested": 5
+                },
+                {
+                    "investorId": "5b25c7fe5adfac08e2fefa76",
+                    "email": "existing2@test.com",
+                    "name": "ICO investor2",
+                    "firstName": "ICO",
+                    "lastName": "investor2",
+                    "country": "Russia",
+                    "dob": "1990-10-23",
+                    "phone": "+7-999-999-99-99",
+                    "ethAddress": "0xdb369b56BA7b07cF287f611Fbf0DAA4A8a4C2751",
+                    "kycStatus": "Not verified",
+                    "amountDeposited": 3,
+                    "amountInvested": 3
+                },
+            ]
+        }
+
+## Investor [/investors/{investorId}]
+
+### Get investor data [GET]
+
++ Parameters
+
+    + investorId (required, string) - Investor ID.
+
++ Request
+
+    + Headers
+
+            Authorization: Bearer token
+            Accept: application/json
+
++ Response 200 (application/json)
+
+        {
+            "email": "existing@test.com",
+            "name": "ICO investor",
+            "firstName": "ICO",
+            "lastName": "investor",
+            "country": "Russia",
+            "dob": "1990-10-25",
+            "phone": "+7-999-999-99-99",
+            "ethAddress": "0xdb369b56BA7b07cF287f611Fbf0DAA4A8a4C2751",
+            "kycStatus": "Not verified",
+            "amountDeposited": 5,
+            "amountInvested": 5
+        }
+
+
+### Update investor data [PUT]
+
++ Parameters
+
+    + investorId (required, string) - Investor ID.
+
++ Request
+
+    + Headers
+
+            Authorization: Bearer token
+            Accept: application/json
+
+    + Body
+
+            {
+                "firstName": "new FirstName",
+                "lastName": "new LastName",
+                "country": "England",
+                "dob": "1990-08-21",
+                "phone": "+7-999-999-99-99",
+                "newPassword": "test12A6",
+                "kycStatus": "Verified"
+            }
+
++ Response 200 (application/json)
+
+        {
+            "email": "existing@test.com",
+            "name": "new FirstName new LastName",
+            "firstName": "new FirstName",
+            "lastName": "new LastName",
+            "country": "England",
+            "dob": "1990-08-21",
+            "phone": "+7-999-999-99-99",
+            "ethAddress": "0xdb369b56BA7b07cF287f611Fbf0DAA4A8a4C2751",
+            "kycStatus": "Verified",
+            "amountDeposited": 5,
+            "amountInvested": 5
+        }
+
+## Activate investor [/investors/{investorId}/{action}]
+
+### Activate/Deactivate investor [GET]
+
++ Parameters
+
+    + investorId (required, string) - Investor ID.
+    + action (required, string) - must be in ["activate", "deactivate"]
+
++ Request
+
+    + Headers
+
+            Authorization: Bearer token
+            Accept: application/json
+
++ Response 200 (application/json)
+
+        {
+            "status": 200,
+            "data": {
+                "consumer": "test@test.com"
+            }
+        }
+
+# Group Transactions
+
+## Transactions [/transactions{?type}{?direction}]
+
+### Get transactions [GET]
+
++ Parameters
+
+    + type (optional, string) - must be in ["ETH", "TOKEN"]
+    + direction (optional, string) - must be in ["IN", "OUT"]
+
++ Request
+
+    + Headers
+
+            Authorization: Bearer token
+            Accept: application/json
+
++ Response 200 (aplication/json)
+
+        {
+            [
+                {
+                    "id": "5b142a4ab869d208143cbc97",
+                    "transactionHash": "0x06ad42c56d54405dd6fa89ccd2f7eb3a928a8ae444f12515a33bf7a56779ac75",
+                    "status" : "confirmed",
+                    "type" : "ETH",
+                    "amount": "1",
+                    "direction": "IN"
+                    "timestamp" : 1509294446,
+                    "userId": "5b25c7fe5adfac08e2fefa75"
+                },
+                {
+                    "id": "5b142a4ab869d208143cbc98",
+                    "transactionHash": "0x06ad42c56d54405dd6fa89ccd2f7eb3a928a8ae444f12515a33bf7a56779ac75",
+                    "status" : "confirmed",
+                    "type" : "TOKEN",
+                    "amount": "26600000",
+                    "direction": "OUT"
+                    "timestamp" : 1509294446,
+                    "userId": "5b25c7fe5adfac08e2fefa75"
+                }
+            ]
+        }
+
+# Group Crowdsale
+
+## Get company info [/crowdsale/company]
+
+### Get company info [GET]
+
++ Request
+
+    + Headers
+
+            Authorization: Bearer token
+            Accept: application/json
+
++ Response 200 (application/json)
+
+        {
+            "companyName": "Some Company Name",
+            "tokenName":"Some Token Name",
+            "tokenAddress": "Some Token Address",
+            "crowdsaleAddress": "Some Crowdsale Address",
+            "whitelistAddress": "Some Whitelist Address"
+        }
+
+## Get common info about ICO [/crowdsale/ico]
+
+### Get common info about ICO [GET]
+
++ Request
+
+    + Headers
+
+            Authorization: Bearer token
+            Accept: application/json
+
++ Response 200 (application/json)
+
+        {
+            "tokensSold": 500000,
+            "ethRaised": 2.5,
+            "usdRaised": 50.50,
+            "investorCount": 50,
+            "startedAt": "2018-01-22",
+            "endedAt": "2018-02-27"
+        }
+
+## Get data for charts [/crowdsale/charts{?step}]
+
+### Get data for token sold chart [GET]
+
++ Parameters
+
+    + step (optional, string, ) - must be in ["1h", "1d", "1w", "1m"] default "all"
+
++ Request
+
+    + Headers
+
+            Authorization: Bearer token
+            Accept: application/json
+
++ Response 200 (application/json)
+
+        {
+            "tokensSold": 50000,
+            "ethRaised": 200,
+            "usdRaised": 500,
+            "usersCount": 50,
+            "transactionsCount": 4000
+        }
+
+# Group Settings
+
+## Settings [/settings]
+
+### Get data [GET]
+
++ Request
+
+    + Headers
+
+            Authorization: Bearer token
+            Accept: application/json
+
++ Response 200 (application/json)
+
+        {
+            "companyName": "SomeCompanyName",
+            "faqUrl": "Some faq url",
+            "tosUrl": "Some tos url",
+            "privacyPolicyUrl": "Some privacy policy url",
+            "tokenDisplayName": "Some token display name",
+            "tokenAddress": "Some token address",
+            "crowdsaleAddress": "Some crowdsale address",
+            "whitelist": true,
+            "whitelistAddress": "Some whitelist address",
+            "emailText": "Some email text",
+            "applicationText": "Some application text"
+        }
+
+### Change data [PUT]
+
++ Request
+
+    + Headers
+
+            Authorization: Bearer token
+            Accept: application/json
+
+    + Body
+
+            {
+                "companyName": "SomeCompanyName",
+                "faqUrl": "Some faq url",
+                "tosUrl": "Some tos url",
+                "privacyPolicyUrl": "Some privacy policy url",
+                "tokenDisplayName": "Some token display name",
+                "tokenAddress": "Some token address",
+                "crowdsaleAddress": "Some crowdsale address",
+                "whitelist": true,
+                "whitelistAddress": "Some whitelist address",
+                "emailText": "Some email text",
+                "applicationText": "Some application text"
+            }
+
++ Response 200 (application/json)
+
+        {
+            "companyName": "SomeCompanyName",
+            "faqUrl": "Some faq url",
+            "tosUrl": "Some tos url",
+            "privacyPolicyUrl": "Some privacy policy url",
+            "tokenDisplayName": "Some token display name",
+            "tokenAddress": "Some token address",
+            "crowdsaleAddress": "Some crowdsale address",
+            "whitelist": true,
+            "whitelistAddress": "Some whitelist address",
+            "emailText": "Some email text",
+            "applicationText": "Some application text"
+        }
