@@ -60,16 +60,9 @@ declare interface AccessTokenResponse {
 }
 
 declare interface AuthClientInterface {
-  tenantToken: string;
-  registerTenant(email: string, password: string): Promise<TenantRegistrationResult>;
   loginTenant(email: string, password: string): Promise<AccessTokenResponse>;
   verifyTenantToken(token: string): Promise<TenantVerificationResult>;
   logoutTenant(token: string): Promise<void>;
-  createUser(data: AuthUserData): Promise<UserRegistrationResult>;
-  loginUser(data: UserLoginData): Promise<AccessTokenResponse>;
-  verifyUserToken(token: string): Promise<UserVerificationResult>;
-  logoutUser(token: string): Promise<void>;
-  deleteUser(login: string): Promise<void>;
 }
 
 declare interface Result {

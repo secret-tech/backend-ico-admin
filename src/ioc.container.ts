@@ -4,7 +4,7 @@ import { Auth } from './middlewares/auth';
 import config from './config';
 import * as express from 'express';
 import * as validation from './middlewares/request.validation';
-import './controllers/secret.controller';
+import './controllers/tenant.controller';
 
 let container = new Container();
 
@@ -18,6 +18,11 @@ container.bind<express.RequestHandler>('AuthMiddleware').toConstantValue(
 );
 container.bind<express.RequestHandler>('OnlyAcceptApplicationJson').toConstantValue(
   (req: any, res: any, next: any) => validation.onlyAcceptApplicationJson(req, res, next)
+);
+
+// middlewares
+container.bind<express.RequestHandler>('InitiateLoginValidation').toConstantValue(
+  (req: any, res: any, next: any) => validation.initiateLogin(req, res, next)
 );
 
 export { container };
