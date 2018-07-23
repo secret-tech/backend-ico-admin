@@ -7,4 +7,3 @@ export class ErrorWithFields extends Error {
     Object.setPrototypeOf(this, this.constructor.prototype);
   }
 }
-export class CustomError extends ErrorWithFields {}

@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { CustomError, ErrorWithFields } from '../exceptions/exceptions';
+import { ErrorWithFields } from '../exceptions/exceptions';
 import * as fs from 'fs';
 import * as i18next from 'i18next';
 import { responseErrorWithObject } from '../helpers/responses';
@@ -16,7 +16,6 @@ export default function handle(err: ErrorWithFields, req: Request, res: Response
   });
 
   switch (err.constructor) {
-    case CustomError:
     default:
       status = 500;
       console.error(err.message);
