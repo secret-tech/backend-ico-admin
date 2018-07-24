@@ -9,9 +9,10 @@ prepare(function(done) {
     'port': 27017,
     'username': '',
     'password': '',
-    'database': 'backend-boilerplate-test',
+    'database': 'backend-ico-admin-test',
     'synchronize': true,
     'logging': true,
+    'useNewUrlParser': true,
     'entities': [
       'src/entities/**/*.ts'
     ],

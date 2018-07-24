@@ -1,12 +1,11 @@
 version: '2'
 services:
-  workspace:
+  api:
     build:
       context: ./
       dockerfile: Dockerfile
     ports:
       - 80:3000
-      - 3000:3000
       - 443:4000
     volumes:
       - ./:/usr/src/app
@@ -19,7 +18,6 @@ services:
     networks:
       default:
         ipv4_address: 10.200.0.2
-
   auth:
     image: jincort/backend-auth:production
     environment:
@@ -58,6 +56,35 @@ services:
     ports:
       - 27017:27017
       - 28017:28017
+
+  ico:
+    image: jincort/backend-ico-dashboard:dev-4055b4f
+    env_file:
+      - .env.dashboard.test
+    ports:
+      - 3000:3000
+    links:
+      - auth
+      - redis
+      - verify
+    depends_on:
+      - mongo
+    tty: true
+    networks:
+      default:
+        ipv4_address: 10.200.0.6
+
+  verify:
+      image: jincort/backend-verify:dev-62b3a0d
+      environment:
+        REDIS_URL: 'redis://redis:6379'
+        THROTTLER_WHITE_LIST: "127.0.0.1,10.200.0.8,10.200.0.9"
+      links:
+        - auth
+        - redis
+      networks:
+        default:
+          ipv4_address: 10.200.0.9
 
 networks:
   default:

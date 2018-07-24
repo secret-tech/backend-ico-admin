@@ -19,7 +19,7 @@ describe('Application', () => {
   });
 
   it('should return 406 for unsupported Accept header', (done) => {
-    request(app).get('/secret/info').set('Content-Type', 'application/json').end((err, res) => {
+    request(app).post('/login').set('Content-Type', 'application/json').end((err, res) => {
       expect(res.status).to.equal(406);
       expect(res.body.error).to.equal('Unsupported "Accept" header');
       done();
