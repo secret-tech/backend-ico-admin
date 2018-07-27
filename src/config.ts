@@ -28,6 +28,7 @@ const {
   SERVICE_NAME
 } = process.env;
 
+/* istanbul ignore next */
 export default {
   app: {
     clientIpHeader: CLIENT_IP_FORWARD_HEADER || 'x-forwarded-for',

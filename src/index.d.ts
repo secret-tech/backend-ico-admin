@@ -88,3 +88,32 @@ declare interface ValidationResult extends Result {
     payload?: any;
   };
 }
+
+declare interface KycInitResult {
+  timestamp: string;
+}
+
+declare interface InvestorResult {
+  investorId?: string;
+  email: string;
+  name: string;
+  firstName: string;
+  lastName: string;
+  country: string;
+  dob: string;
+  phone: string;
+  ethAddress: string;
+  kycStatus: string;
+  amountDeposited: number;
+  amountInvested: number;
+}
+
+declare interface InputInvestor {
+  firstName?: string;
+  lastName?: string;
+  country?: string;
+  dob?: string;
+  phone?: string;
+  newPassword?: string;
+  kycStatus?: string;
+}

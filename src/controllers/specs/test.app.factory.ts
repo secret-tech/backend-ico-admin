@@ -31,6 +31,7 @@ const mockAuthMiddleware = () => {
   );
 };
 
+/* istanbul ignore next */
 export const buildApp = () => {
   const newApp = express();
   newApp.use(bodyParser.json());
