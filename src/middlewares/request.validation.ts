@@ -110,12 +110,21 @@ export function updateInvestorValidation(req: Request, res: Response, next: Next
         }
       }
     }),
-    kycStatus: Joi.string().equal(['verified', 'not_verified'])
-  });
+    kycStatus: Joi.string().valid(['verified', 'not_verified'])
+  }).or(['firstName', 'lastName', 'country', 'dob', 'phone', 'newPassword', 'kycStatus']);
 
   commonValidate(HttpStatus.UNPROCESSABLE_ENTITY, schema, req, res, next);
 }
 
+export function accessUpdateMethodValidation(req: Request, res: Response, next: NextFunction) {
+  const schema = Joi.object().keys({
+    method: Joi.string().valid(['activate', 'deactivate'])
+  });
+
+  paramsValidate(HttpStatus.METHOD_NOT_ALLOWED, schema, req, res, next);
+}
+
+/* istanbul ignore next */
 export function translateCustomMessage(message: string, req: Request) {
   const lang = req.acceptsLanguages() || 'en';
   const langPath = __dirname + `/../resources/locales/${lang}/errors.json`;

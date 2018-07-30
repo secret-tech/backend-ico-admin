@@ -63,6 +63,7 @@ declare interface AuthClientInterface {
   loginTenant(email: string, password: string): Promise<AccessTokenResponse>;
   verifyTenantToken(token: string): Promise<TenantVerificationResult>;
   logoutTenant(token: string): Promise<void>;
+  createUser(data: AuthUserData, tenantToken: string): Promise<UserRegistrationResult>;
 }
 
 declare interface Result {
@@ -116,4 +117,8 @@ declare interface InputInvestor {
   phone?: string;
   newPassword?: string;
   kycStatus?: string;
+}
+
+declare interface AccessUpdateResult {
+  consumer: string;
 }

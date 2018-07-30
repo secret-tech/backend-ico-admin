@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { ErrorWithFields, NotFound } from '../exceptions/exceptions';
+import { ErrorWithFields } from '../exceptions/exceptions';
 import * as fs from 'fs';
 import * as i18next from 'i18next';
 import { responseErrorWithObject } from '../helpers/responses';
@@ -21,6 +21,9 @@ export default function handle(err: ErrorWithFields, req: Request, res: Response
   switch (err.constructor) {
     case Err.NotFound:
       status = httpStatus.NOT_FOUND;
+      break;
+    case Err.WrongMethod:
+      status = httpStatus.METHOD_NOT_ALLOWED;
       break;
     default:
       status = httpStatus.INTERNAL_SERVER_ERROR;

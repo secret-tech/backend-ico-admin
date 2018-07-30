@@ -23,6 +23,11 @@ const mockAuthMiddleware = () => {
   authMock.setup(x => x.loginTenant(TypeMoq.It.isAny(), TypeMoq.It.isAny()))
     .returns(async(): Promise<any> => loginResult);
 
+  authMock.setup(x => x.createUser(TypeMoq.It.isAny(), TypeMoq.It.isAny()))
+    .returns(async(): Promise<any> => {
+      return {};
+    });
+
   container.rebind<AuthClientInterface>(AuthClientType).toConstantValue(authMock.object);
 
   const auth = new Auth(container.get<AuthClientInterface>(AuthClientType));

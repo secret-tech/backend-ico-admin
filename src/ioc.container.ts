@@ -33,5 +33,8 @@ container.bind<express.RequestHandler>('InvestorIdValidation').toConstantValue(
 container.bind<express.RequestHandler>('UpdateInvestorValidation').toConstantValue(
   (req: any, res: any, next: any) => validation.updateInvestorValidation(req, res, next)
 );
+container.bind<express.RequestHandler>('AccessUpdateMethodValidation').toConstantValue(
+  (req: any, res: any, next: any) => validation.accessUpdateMethodValidation(req, res, next)
+);
 
 export { container };

@@ -1,39 +1,37 @@
-import config from '../src/config';
-
 import { container } from '../src/ioc.container';
 import { cleanUpMetadata } from 'inversify-express-utils';
 const Fixtures = require('node-mongodb-fixtures');
 const fixtures = new Fixtures({
-  dir: 'test/fixtures/ico-dashboard'
+  dir: 'test/fixtures/ico-dashboard',
+  mute: true
 });
 
 before(function(done) {
-  fixtures
-    .connect('mongodb://mongo:27017/backend-ico-admin-test')
-    .then(() => fixtures.unload())
-    .then(() => fixtures.load())
-    .catch(e => console.error(e))
+  fixtures.connect('mongodb://mongo:27017/backend-ico-admin-test')
     .finally(() => {
       done();
     });
 });
 
-after(function(done) {
-  fixtures
-    .unload()
-    .catch(e => console.error(e))
-    .finally(() => {
-      fixtures.disconnect();
-      done();
-    });
+after(function() {
+  fixtures.disconnect();
 });
 
 beforeEach(function(done) {
   cleanUpMetadata();
   container.snapshot();
-  done();
+  fixtures
+    .load()
+    .finally(() => {
+      done();
+    });
 });
 
-afterEach(function() {
+afterEach(function(done) {
   container.restore();
+  fixtures
+    .unload()
+    .finally(() => {
+      done();
+    });
 });
