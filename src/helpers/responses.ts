@@ -7,6 +7,7 @@ import { INTERNAL_SERVER_ERROR, OK } from 'http-status';
  * @param status
  * @param responseJson
  */
+/* istanbul ignore next */
 export function responseWith(res: Response, responseJson: Object, status: number = OK) {
   return res.status(status).json({ ...responseJson, status });
 }
@@ -17,6 +18,7 @@ export function responseWith(res: Response, responseJson: Object, status: number
  * @param err
  * @param status
  */
+/* istanbul ignore next */
 export function responseErrorWithObject(res: Response, err: any, status: number = INTERNAL_SERVER_ERROR) {
   return responseWith(res, {
     ...err,

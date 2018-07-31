@@ -6,7 +6,6 @@ import { AuthClientType } from '../../services/auth.client';
 import * as express from 'express';
 import { Application, NextFunction, Request, Response } from 'express';
 
-chai.use(require('chai-http'));
 const {expect, request} = chai;
 
 const authClient = container.get<AuthClientInterface>(AuthClientType);

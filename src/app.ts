@@ -14,9 +14,10 @@ if (config.app.accessLog === 'true') {
   app.use(morgan('combined'));
 }
 
+/* istanbul ignore next */
 if (process.env.ENVIRONMENT === 'production') {
   app.use((req: any, res: Response, next: NextFunction) => {
-    if (!req.client.authorized && req.path !== '/dashboard/public') {
+    if (!req.client.authorized) {
       return res.status(401).send({error: 'Invalid client certificate'});
     }
     next();
@@ -25,6 +26,7 @@ if (process.env.ENVIRONMENT === 'production') {
 
 app.disable('x-powered-by');
 
+/* istanbul ignore next */
 app.use((req: Request, res: Response, next: NextFunction) => {
   if (config.app.forceHttps === 'enabled') {
     if (!req.secure) {

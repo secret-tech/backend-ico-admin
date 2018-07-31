@@ -3,7 +3,10 @@ import { ErrorWithFields } from '../exceptions/exceptions';
 import * as fs from 'fs';
 import * as i18next from 'i18next';
 import { responseErrorWithObject } from '../helpers/responses';
+import * as httpStatus from 'http-status';
+import * as Err from '../exceptions/exceptions';
 
+/* istanbul ignore next */
 export default function handle(err: ErrorWithFields, req: Request, res: Response, next: NextFunction): void {
   let status;
   const lang = req.acceptsLanguages() || 'en';
@@ -16,8 +19,14 @@ export default function handle(err: ErrorWithFields, req: Request, res: Response
   });
 
   switch (err.constructor) {
+    case Err.NotFound:
+      status = httpStatus.NOT_FOUND;
+      break;
+    case Err.WrongMethod:
+      status = httpStatus.METHOD_NOT_ALLOWED;
+      break;
     default:
-      status = 500;
+      status = httpStatus.INTERNAL_SERVER_ERROR;
       console.error(err.message);
       console.error(err.stack);
   }

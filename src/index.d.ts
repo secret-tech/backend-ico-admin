@@ -63,6 +63,7 @@ declare interface AuthClientInterface {
   loginTenant(email: string, password: string): Promise<AccessTokenResponse>;
   verifyTenantToken(token: string): Promise<TenantVerificationResult>;
   logoutTenant(token: string): Promise<void>;
+  createUser(data: AuthUserData, tenantToken: string): Promise<UserRegistrationResult>;
 }
 
 declare interface Result {
@@ -87,4 +88,37 @@ declare interface ValidationResult extends Result {
     attempts: number;
     payload?: any;
   };
+}
+
+declare interface KycInitResult {
+  timestamp: string;
+}
+
+declare interface InvestorResult {
+  investorId?: string;
+  email: string;
+  name: string;
+  firstName: string;
+  lastName: string;
+  country: string;
+  dob: string;
+  phone: string;
+  ethAddress: string;
+  kycStatus: string;
+  amountDeposited: number;
+  amountInvested: number;
+}
+
+declare interface InputInvestor {
+  firstName?: string;
+  lastName?: string;
+  country?: string;
+  dob?: string;
+  phone?: string;
+  newPassword?: string;
+  kycStatus?: string;
+}
+
+declare interface AccessUpdateResult {
+  consumer: string;
 }

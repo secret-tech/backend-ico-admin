@@ -54,6 +54,7 @@ export class Logger extends winston.Logger {
    * Get logger with name prefixed
    * @param name
    */
+  /* istanbul ignore next */
   static getInstance(name: string): Logger {
     name = name || '';
     if (this.loggers[name]) {
@@ -70,6 +71,7 @@ export class Logger extends winston.Logger {
    *
    * @param initialMeta
    */
+  /* istanbul ignore next */
   sub(initialMeta: { [k: string]: any; }, initialPrefix?: string): SubLogger {
     let meta: { meta?: any } = initialMeta ? { meta: { ...initialMeta } } : {};
     let prefix = initialPrefix || '';

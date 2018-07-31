@@ -63,6 +63,24 @@ export class AuthClient implements AuthClientInterface {
       throw error;
     }
   }
+
+  async createUser(data: AuthUserData, tenantToken: string): Promise<UserRegistrationResult> {
+    try {
+      return await request.json<UserRegistrationResult>('/user', {
+        baseUrl: this.baseUrl,
+        method: 'POST',
+        body: data,
+        headers: {
+          'authorization': `Bearer ${tenantToken}`,
+          'accept': 'application/json',
+          'content-type': 'application/json'
+        }
+      });
+    } catch (error) {
+      this.logger.exception('createUser', error);
+      throw error;
+    }
+  }
 }
 
 const AuthClientType = Symbol('AuthClientInterface');
