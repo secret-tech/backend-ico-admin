@@ -38,3 +38,22 @@ export function transformAccessUpdate(investor: Investor): AccessUpdateResult {
     consumer: investor.email
   };
 }
+
+export function transformTransactionList(transactions: any): TransactionResult[] {
+  return transactions.map((t) => {
+    let tx = {
+      id: t._id.toHexString(),
+      transactionHash: t.transactionHash,
+      status: t.status,
+      type: Number(t.ethAmount) > 0 ? 'ETH' : 'TOKEN',
+      amount: t.amount,
+      timestamp: t.timestamp,
+    };
+
+    if (t.direction) {
+      tx['direction'] = t.direction;
+    }
+
+    return tx;
+  });
+}

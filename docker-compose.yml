@@ -47,7 +47,7 @@ services:
         ipv4_address: 10.200.0.4
 
   mongo:
-    image: jincort/backend-mongodb:production
+    image: mongo:4.0
     volumes:
         - ./storage/mongodb:/data/db
     networks:

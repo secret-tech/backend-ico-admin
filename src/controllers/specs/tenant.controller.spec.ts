@@ -1,6 +1,5 @@
 import * as chai from "chai";
 import * as factory from './test.app.factory';
-import { cleanUpMetadata } from 'inversify-express-utils';
 require('../../../test/load.fixtures');
 
 const {expect, request} = chai;
@@ -11,17 +10,7 @@ const postRequest = (customApp, url: string) => {
     .set('Accept', 'application/json');
 };
 
-const getRequest = (customApp, url: string) => {
-  return request(customApp)
-    .get(url)
-    .set('Accept', 'application/json');
-};
-
 describe('Tenant Controller', () => {
-  beforeEach(async() => {
-    cleanUpMetadata();
-  });
-
   describe('POST /login', () => {
     it('should get tenant token', (done) => {
       const params = {
