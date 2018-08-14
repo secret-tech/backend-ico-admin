@@ -4,7 +4,9 @@
       "Invalid password": "Неверный пароль",
       "Investors not found": "Инвесторы не найдены",
       "Investor not found": "Инвестор не найден",
-      "Wrong method for update investor access": "Недопустимый метод для обновления доступа инвестора"
+      "Wrong method for update investor access": "Недопустимый метод для обновления доступа инвестора",
+      "User is not found": "Пользователь не найден",
+      "You don't have permission": "У вас нет прав"
     }
   }
 }

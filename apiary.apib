@@ -7,27 +7,6 @@ Almost all operations require 2-factor Authentication.
 To fulfill this requirement most of them are split to 2 endpoints: first (e.g. /user/login/initiate)
 initiates login and generates JWT token. Next this token must be verified using endpoint /user/login/verify.
 
-# Group User
-
-## User login [/login]
-
-### User login [POST]
-
-+ email: `test@test.com` (required, string)
-+ password: `passwordA6` (required, string)
-
-+ Request
-
-    + Headers
-
-            Accept: application/json
-
-+ Response 200 (application/json)
-
-        {
-            "accessToken": "jwt_token"
-        }
-
 # Group Investors
 
 ## Investors [/investors]

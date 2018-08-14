@@ -5,15 +5,16 @@ require('../../../test/load.fixtures');
 import { container } from '../../ioc.container';
 import { InvestorServiceInterface, InvestorServiceType } from '../investor.service';
 import { NotFound, WrongMethod } from '../../exceptions/exceptions';
-import { AuthClient } from '../auth.client';
+import { AuthClient, AuthClientInterface, AuthClientType } from '../auth.client';
 import * as TypeMoq from 'typemoq';
 
 const { expect } = chai;
 
-const autMock = TypeMoq.Mock.ofType(AuthClient);
-autMock.setup(x => x.createUser(TypeMoq.It.isAny(), TypeMoq.It.isAny())).returns(async(): Promise<any> => {
+const authMock = TypeMoq.Mock.ofType(AuthClient);
+authMock.setup(x => x.createUser(TypeMoq.It.isAny())).returns(async(): Promise<any> => {
   return {};
 });
+container.rebind<AuthClientInterface>(AuthClientType).toConstantValue(authMock.object);
 
 const investorService = container.get<InvestorServiceInterface>(InvestorServiceType);
 
@@ -86,9 +87,8 @@ describe('Investor Service', () => {
       newPassword: 'newPassword123',
       kycStatus: 'verified'
     };
-    const tenantToken = 'verified_token';
 
-    const investor = await investorService.update(investorId, inputInvestor, tenantToken);
+    const investor = await investorService.update(investorId, inputInvestor);
 
     expect(investor).to.deep.eq({
       email: 'user2@user.com',
@@ -118,7 +118,7 @@ describe('Investor Service', () => {
     };
     const tenantToken = 'verified_token';
 
-    expect(investorService.update(investorId, inputInvestor, tenantToken)).to.be.rejectedWith(NotFound);
+    expect(investorService.update(investorId, inputInvestor)).to.be.rejectedWith(NotFound);
   });
 
   it('should activate investor', async() => {

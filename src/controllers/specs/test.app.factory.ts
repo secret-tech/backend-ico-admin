@@ -1,7 +1,7 @@
 import { Response, Request, NextFunction } from 'express';
 
 import {
-  AuthClient,
+  AuthClient, AuthClientInterface,
   AuthClientType
 } from '../../services/auth.client';
 
@@ -14,19 +14,20 @@ import { Auth } from '../../middlewares/auth';
 import handle from '../../middlewares/error.handler';
 
 const mockAuthMiddleware = () => {
-  const authMock = TypeMoq.Mock.ofType(AuthClient);
+  const authMock = TypeMoq.Mock.ofType<AuthClientInterface>(AuthClient);
 
-  const loginResult = {
-    accessToken: 'new_token'
+  const verifyTokenResult = {
+    login: 'user1@user.com',
+    scope: 'ico-admin'
   };
 
-  authMock.setup(x => x.loginTenant(TypeMoq.It.isAny(), TypeMoq.It.isAny()))
-    .returns(async(): Promise<any> => loginResult);
-
-  authMock.setup(x => x.createUser(TypeMoq.It.isAny(), TypeMoq.It.isAny()))
+  authMock.setup(x => x.createUser(TypeMoq.It.isAny()))
     .returns(async(): Promise<any> => {
       return {};
     });
+
+  authMock.setup(x => x.verifyUserToken(TypeMoq.It.isAny()))
+    .returns(async(): Promise<any> => verifyTokenResult);
 
   container.rebind<AuthClientInterface>(AuthClientType).toConstantValue(authMock.object);
 
