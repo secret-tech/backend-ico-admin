@@ -122,3 +122,29 @@ declare interface InputInvestor {
 declare interface AccessUpdateResult {
   consumer: string;
 }
+
+declare interface TransactionResult {
+  id: string;
+  transactionHash: string;
+  status: string;
+  type: string;
+  amount: string;
+  direction?: string;
+  timestamp: number;
+}
+
+declare interface TransactionInputParams {
+  type: string;
+  direction: string;
+  walletAddress: string;
+}
+
+declare interface PaginationParams {
+  page: number;
+  limit: number;
+}
+
+declare interface SortParams {
+  sort: string;
+  desc: boolean;
+}

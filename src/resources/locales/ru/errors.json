@@ -4,7 +4,8 @@
       "Invalid password": "Неверный пароль",
       "Investors not found": "Инвесторы не найдены",
       "Investor not found": "Инвестор не найден",
-      "Wrong method for update investor access": "Недопустимый метод для обновления доступа инвестора"
+      "Wrong method for update investor access": "Недопустимый метод для обновления доступа инвестора",
+      "Value '{{value}}' of parameter '{{param}}' is wrong. It must be in {{in_values}}": "Недопустимое значение '{{value}}' параметра '{{param}}'. Должен принимать одно из значений {{in_values}}"
     }
   }
 }

@@ -12,6 +12,7 @@ const options = {
 
 const passwordRegex = /^[a-zA-Z0\d!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~]{8,}$/;
 const phoneNumberRegex = /^\+[1-9]\d{1,14}$/;
+const ethereumAddressValidator = Joi.string().regex(/^0x[\da-fA-F]{40,40}$/);
 
 export function onlyAcceptApplicationJson(req: Request, res: Response, next: NextFunction) {
   if (req.method !== 'OPTIONS' && req.header('Accept') !== 'application/json' && req.header('Content-Type') === 'application/json') {
@@ -136,4 +137,19 @@ export function translateCustomMessage(message: string, req: Request) {
   });
 
   return i18next.t(message);
+}
+
+export function transactionGetListValidation(req: Request, res: Response, next: NextFunction) {
+  const schema = Joi.object().keys({
+    type: Joi.string().valid(['ETH', 'TOKEN']).optional(),
+    direction: Joi.string().valid(['IN', 'OUT']).optional(),
+    walletAddress: ethereumAddressValidator.optional(),
+    page: Joi.number().optional().default(0),
+    limit: Joi.number().optional().default(50),
+    sort: Joi.string().optional(),
+    desc: Joi.boolean().optional()
+  }).with('direction', 'walletAddress')
+    .with('desc', 'sort');
+
+  commonValidate(HttpStatus.UNPROCESSABLE_ENTITY, schema, req, res, next);
 }
