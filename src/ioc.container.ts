@@ -4,13 +4,28 @@ import { Auth } from './middlewares/auth';
 import * as express from 'express';
 import * as validation from './middlewares/request.validation';
 import { InvestorService, InvestorServiceInterface, InvestorServiceType } from './services/investor.service';
+import {
+  TransactionService,
+  TransactionServiceInterface,
+  TransactionServiceType
+} from './services/transaction.service';
+import './controllers/tenant.controller';
 import './controllers/investor.controller';
+import './controllers/transaction.controller';
+import {
+  TransactionRepository,
+  TransactionRepositoryInterface,
+  TransactionRepositoryType
+} from './services/repositories/transaction.repository';
 
 let container = new Container();
 
 // services
 container.bind<AuthClientInterface>(AuthClientType).to(AuthClient);
-container.bind<InvestorServiceInterface>(InvestorServiceType).to(InvestorService);
+container.bind<InvestorServiceInterface>(InvestorServiceType).to(InvestorService).inSingletonScope();
+container.bind<TransactionServiceInterface>(TransactionServiceType).to(TransactionService);
+container.bind<TransactionRepositoryInterface>(TransactionRepositoryType).to(TransactionRepository).inSingletonScope();
+
 
 // middlewares
 const auth = new Auth(container.get<AuthClientInterface>(AuthClientType));
@@ -30,6 +45,9 @@ container.bind<express.RequestHandler>('UpdateInvestorValidation').toConstantVal
 );
 container.bind<express.RequestHandler>('AccessUpdateMethodValidation').toConstantValue(
   (req: any, res: any, next: any) => validation.accessUpdateMethodValidation(req, res, next)
+);
+container.bind<express.RequestHandler>('TransactionGetListValidation').toConstantValue(
+  (req: any, res: any, next: any) => validation.transactionGetListValidation(req, res, next)
 );
 
 export { container };

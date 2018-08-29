@@ -6,7 +6,8 @@
       "Investor not found": "Инвестор не найден",
       "Wrong method for update investor access": "Недопустимый метод для обновления доступа инвестора",
       "User is not found": "Пользователь не найден",
-      "You don't have permission": "У вас нет прав"
+      "You don't have permission": "У вас нет прав",
+      "Value '{{value}}' of parameter '{{param}}' is wrong. It must be in {{in_values}}": "Недопустимое значение '{{value}}' параметра '{{param}}'. Должен принимать одно из значений {{in_values}}"
     }
   }
 }

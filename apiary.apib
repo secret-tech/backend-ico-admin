@@ -152,14 +152,19 @@ initiates login and generates JWT token. Next this token must be verified using 
 
 # Group Transactions
 
-## Transactions [/transactions{?type}{?direction}]
+## Transactions [/transactions{?type,direction,walletAddress,page,limit,sort,desc}]
 
 ### Get transactions [GET]
 
 + Parameters
 
     + type (optional, string) - must be in ["ETH", "TOKEN"]
+    + walletAddress (optional, string) - required if query parameter `direction` is presented
     + direction (optional, string) - must be in ["IN", "OUT"]
+    + page (optional, number)
+    + limit (optional, number) - default value 50 if limit is not exist
+    + sort (optional, string) - required if query parameter `desc` is presented. Can be one of ["timestamp", "amount"]
+    + desc (optional, boolean)
 
 + Request
 
@@ -177,20 +182,18 @@ initiates login and generates JWT token. Next this token must be verified using 
                     "transactionHash": "0x06ad42c56d54405dd6fa89ccd2f7eb3a928a8ae444f12515a33bf7a56779ac75",
                     "status" : "confirmed",
                     "type" : "ETH",
-                    "amount": "1",
+                    "amount": 1,
                     "direction": "IN"
-                    "timestamp" : 1509294446,
-                    "userId": "5b25c7fe5adfac08e2fefa75"
+                    "timestamp" : 1509294446
                 },
                 {
                     "id": "5b142a4ab869d208143cbc98",
                     "transactionHash": "0x06ad42c56d54405dd6fa89ccd2f7eb3a928a8ae444f12515a33bf7a56779ac75",
                     "status" : "confirmed",
                     "type" : "TOKEN",
-                    "amount": "26600000",
+                    "amount": 26600000,
                     "direction": "OUT"
-                    "timestamp" : 1509294446,
-                    "userId": "5b25c7fe5adfac08e2fefa75"
+                    "timestamp" : 1509294446
                 }
             ]
         }

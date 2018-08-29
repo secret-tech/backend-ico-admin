@@ -50,8 +50,22 @@ describe('Investor controller', () => {
             country: 'England',
             dob: '1990-07-20',
             phone: '+79999999999',
-            ethAddress: '0x6b78c67Bf14eEA09ce74e18A1f5Eb0D9403B4492',
+            ethAddress: '0x6b78c67Bf14eEA09ce74e18A1f5Eb0D9403B4493',
             kycStatus: 'verified',
+            amountDeposited: 0,
+            amountInvested: 0
+          },
+          {
+            investorId: '59f07e23b41f6373f64a8dc8',
+            email: 'user3@user.com',
+            name: 'Ivan Ivanov',
+            firstName: 'Ivan',
+            lastName: 'Ivanov',
+            country: 'England',
+            dob: '1990-05-23',
+            phone: '+79999999999',
+            ethAddress: null,
+            kycStatus: 'not_verified',
             amountDeposited: 0,
             amountInvested: 0
           }
@@ -75,7 +89,7 @@ describe('Investor controller', () => {
           country: 'England',
           dob: '1990-07-20',
           phone: '+79999999999',
-          ethAddress: '0x6b78c67Bf14eEA09ce74e18A1f5Eb0D9403B4492',
+          ethAddress: '0x6b78c67Bf14eEA09ce74e18A1f5Eb0D9403B4493',
           kycStatus: 'verified',
           amountDeposited: 0,
           amountInvested: 0
@@ -127,7 +141,7 @@ describe('Investor controller', () => {
           country: 'Brazil',
           dob: '1992-02-18',
           phone: '+79998888888',
-          ethAddress: '0x6b78c67Bf14eEA09ce74e18A1f5Eb0D9403B4492',
+          ethAddress: '0x6b78c67Bf14eEA09ce74e18A1f5Eb0D9403B4493',
           kycStatus: 'verified',
           amountDeposited: 0,
           amountInvested: 0
