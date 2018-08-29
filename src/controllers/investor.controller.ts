@@ -37,10 +37,8 @@ export class InvestorController {
   )
   async update(req: Request, res: Response): Promise<void> {
     const { investorId } = req.params;
-    const parts = req.headers.authorization.split(' ');
-    const token = parts[1];
 
-    res.json(await this.investorService.update(investorId, req.body, token));
+    res.json(await this.investorService.update(investorId, req.body));
   }
 
   @httpGet(

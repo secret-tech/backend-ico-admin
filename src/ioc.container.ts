@@ -9,7 +9,6 @@ import {
   TransactionServiceInterface,
   TransactionServiceType
 } from './services/transaction.service';
-import './controllers/tenant.controller';
 import './controllers/investor.controller';
 import './controllers/transaction.controller';
 import {
@@ -22,7 +21,7 @@ let container = new Container();
 
 // services
 container.bind<AuthClientInterface>(AuthClientType).to(AuthClient);
-container.bind<InvestorServiceInterface>(InvestorServiceType).to(InvestorService).inSingletonScope();
+container.bind<InvestorServiceInterface>(InvestorServiceType).to(InvestorService);
 container.bind<TransactionServiceInterface>(TransactionServiceType).to(TransactionService);
 container.bind<TransactionRepositoryInterface>(TransactionRepositoryType).to(TransactionRepository).inSingletonScope();
 
