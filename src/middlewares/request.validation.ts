@@ -24,15 +24,6 @@ export function onlyAcceptApplicationJson(req: Request, res: Response, next: Nex
   }
 }
 
-export function initiateLogin(req: Request, res: Response, next: NextFunction) {
-  const schema = Joi.object().keys({
-    email: Joi.string().email().required(),
-    password: Joi.string().required()
-  });
-
-  commonValidate(HttpStatus.UNPROCESSABLE_ENTITY, schema, req, res, next);
-}
-
 /* istanbul ignore next */
 export function commonValidate(code: number, schema: Joi.Schema, req: Request, res: Response, next: NextFunction) {
   const lang = req.acceptsLanguages() || 'en';

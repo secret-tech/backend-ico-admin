@@ -1,7 +1,6 @@
 import { Container } from 'inversify';
-import { AuthClientType, AuthClient } from './services/auth.client';
+import { AuthClientType, AuthClient, AuthClientInterface } from './services/auth.client';
 import { Auth } from './middlewares/auth';
-import config from './config';
 import * as express from 'express';
 import * as validation from './middlewares/request.validation';
 import { InvestorService, InvestorServiceInterface, InvestorServiceType } from './services/investor.service';
@@ -10,7 +9,6 @@ import {
   TransactionServiceInterface,
   TransactionServiceType
 } from './services/transaction.service';
-import './controllers/tenant.controller';
 import './controllers/investor.controller';
 import './controllers/transaction.controller';
 import {
@@ -22,8 +20,8 @@ import {
 let container = new Container();
 
 // services
-container.bind<AuthClientInterface>(AuthClientType).toConstantValue(new AuthClient(config.auth.baseUrl));
-container.bind<InvestorServiceInterface>(InvestorServiceType).to(InvestorService).inSingletonScope();
+container.bind<AuthClientInterface>(AuthClientType).to(AuthClient);
+container.bind<InvestorServiceInterface>(InvestorServiceType).to(InvestorService);
 container.bind<TransactionServiceInterface>(TransactionServiceType).to(TransactionService);
 container.bind<TransactionRepositoryInterface>(TransactionRepositoryType).to(TransactionRepository).inSingletonScope();
 
@@ -36,9 +34,6 @@ container.bind<express.RequestHandler>('AuthMiddleware').toConstantValue(
 );
 container.bind<express.RequestHandler>('OnlyAcceptApplicationJson').toConstantValue(
   (req: any, res: any, next: any) => validation.onlyAcceptApplicationJson(req, res, next)
-);
-container.bind<express.RequestHandler>('InitiateLoginValidation').toConstantValue(
-  (req: any, res: any, next: any) => validation.initiateLogin(req, res, next)
 );
 container.bind<express.RequestHandler>('InvestorIdValidation').toConstantValue(
   (req: any, res: any, next: any) => validation.investorIdValidation(req, res, next)

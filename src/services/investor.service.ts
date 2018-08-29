@@ -6,12 +6,12 @@ import { inject, injectable } from 'inversify';
 import { ObjectID } from 'mongodb';
 import * as bcrypt from 'bcrypt-nodejs';
 import { Logger } from '../logger';
-import { AuthClientType } from './auth.client';
+import { AuthClientInterface, AuthClientType } from './auth.client';
 
 export interface InvestorServiceInterface {
   getList(): Promise<InvestorResult[]>;
   getOne(investorId: any): Promise<InvestorResult>;
-  update(investorId: any, inputInvestor: InputInvestor, tenantToken: string): Promise<InvestorResult>;
+  update(investorId: any, inputInvestor: InputInvestor): Promise<InvestorResult>;
   accessUpdate(investorId: string, method: string): Promise<AccessUpdateResult>;
 }
 
@@ -46,7 +46,7 @@ export class InvestorService implements InvestorServiceInterface {
     return transformers.transformInvestor(investor);
   }
 
-  async update(investorId: any, inputInvestor: InputInvestor, tenantToken: string): Promise<InvestorResult> {
+  async update(investorId: any, inputInvestor: InputInvestor): Promise<InvestorResult> {
     const investor = await getConnection().getMongoRepository(Investor).findOne(
       new ObjectID.createFromHexString(investorId)
     );
@@ -76,8 +76,8 @@ export class InvestorService implements InvestorServiceInterface {
 
     await getConnection().getMongoRepository(Investor).save(investor);
 
-    /* istanbul ignore if */
-    if (investor.hasOwnProperty('newPassword')) {
+    /* istanbul ignore next */
+    if (inputInvestor.hasOwnProperty('newPassword')) {
       logger.debug('Recreate investor user in auth');
 
       await this.authClient.createUser({
@@ -85,7 +85,7 @@ export class InvestorService implements InvestorServiceInterface {
         login: investor.email.toLowerCase(),
         password: investor.passwordHash,
         sub: investor.verification.id
-      }, tenantToken);
+      });
     }
 
     return transformers.transformInvestor(investor);

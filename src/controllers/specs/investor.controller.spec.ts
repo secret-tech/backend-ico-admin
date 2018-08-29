@@ -1,5 +1,8 @@
 import * as chai from "chai";
 import * as factory from './test.app.factory';
+import * as TypeMoq from "typemoq";
+import { AuthClient, AuthClientInterface, AuthClientType } from '../../services/auth.client';
+import { container } from '../../ioc.container';
 require('../../../test/load.fixtures');
 
 const {expect, request} = chai;

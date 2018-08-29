@@ -39,7 +39,7 @@ services:
   redis:
     image: jincort/backend-redis:production
     ports:
-      - "6379"
+      - 6379:6379
     volumes:
       - ./storage/redis:/data
     networks:
