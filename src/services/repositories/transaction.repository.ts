@@ -4,8 +4,9 @@ import { WrongRequestParameterValue } from '../../exceptions/exceptions';
 import { getConnection, getMongoManager } from 'typeorm';
 
 export interface TransactionRepositoryInterface {
-  getAllByParams(transactionParams: TransactionInputParams, pagination: PaginationParams, sortParams: SortParams): Promise<any>;
+  getAllWithPagination(transactionParams: TransactionInputParams, pagination: PaginationParams, sortParams: SortParams): Promise<any>;
   getAllCountByParams(transactionParams: TransactionInputParams): Promise<number>;
+  getAllWithParams(transactionParams: TransactionInputParams): Promise<any>;
 }
 
 @injectable()
@@ -13,7 +14,7 @@ export class TransactionRepository implements TransactionRepositoryInterface {
   private query: any;
   private order: any;
 
-  async getAllByParams(transactionParams: TransactionInputParams, pagination: PaginationParams, sortParams: SortParams): Promise<any> {
+  async getAllWithPagination(transactionParams: TransactionInputParams, pagination: PaginationParams, sortParams: SortParams): Promise<any> {
     const wallet = transactionParams.walletAddress || null;
 
     this.buildQueryGetAllByParams(transactionParams);
@@ -60,6 +61,34 @@ export class TransactionRepository implements TransactionRepositoryInterface {
     this.buildQueryGetAllByParams(transactionParams);
 
     return getMongoManager().createEntityCursor(Transaction, this.query).count(false);
+  }
+
+  async getAllWithParams(transactionParams: TransactionInputParams): Promise<any> {
+    const wallet = transactionParams.walletAddress || null;
+
+    this.buildQueryGetAllByParams(transactionParams);
+
+    const transactions = await getConnection().getMongoRepository(Transaction).aggregate([
+      {
+        '$match': this.query
+      },
+      {
+        '$addFields': {
+          'amount': {
+            '$add': [
+              {
+                '$toDouble': '$ethAmount'
+              },
+              {
+                '$toDouble': '$tokenAmount'
+              }
+            ]
+          }
+        }
+      }
+    ]).toArray();
+
+    return wallet ? transactions.map(t => ({ ...t, direction: t.from === wallet ? 'OUT' : 'IN' })) : transactions;
   }
 
   private buildQueryGetAllByParams(transactionParams: TransactionInputParams): void {
@@ -142,6 +171,7 @@ export class TransactionRepository implements TransactionRepositoryInterface {
     }
   }
 
+  /* istanbul ignore next */
   private pushAndInMongoQuery(queryObject: any): void {
     if (!this.query.hasOwnProperty('$and')) {
       this.query.$and = [];

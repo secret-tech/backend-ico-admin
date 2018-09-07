@@ -141,3 +141,9 @@ declare interface SortParams {
   sort: string;
   desc: boolean;
 }
+
+declare interface InvestorInputParams {
+  country: string;
+  kycStatus: string;
+  search: string;
+}

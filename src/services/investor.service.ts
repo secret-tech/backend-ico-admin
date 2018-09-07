@@ -7,9 +7,12 @@ import { ObjectID } from 'mongodb';
 import * as bcrypt from 'bcrypt-nodejs';
 import { Logger } from '../logger';
 import { AuthClientInterface, AuthClientType } from './auth.client';
+import { InvestorRepositoryInterface, InvestorRepositoryType } from './repositories/investor.repository';
+import config from '../config';
+import { TransactionRepositoryInterface, TransactionRepositoryType } from './repositories/transaction.repository';
 
 export interface InvestorServiceInterface {
-  getList(): Promise<InvestorResult[]>;
+  getList(queryParams: any): Promise<any>;
   getOne(investorId: any): Promise<InvestorResult>;
   update(investorId: any, inputInvestor: InputInvestor): Promise<InvestorResult>;
   accessUpdate(investorId: string, method: string): Promise<AccessUpdateResult>;
@@ -20,40 +23,86 @@ export class InvestorService implements InvestorServiceInterface {
   private logger = Logger.getInstance('INVESTOR_SERVICE');
 
   constructor(
-    @inject(AuthClientType) private authClient: AuthClientInterface
+    @inject(AuthClientType) private authClient: AuthClientInterface,
+    @inject(InvestorRepositoryType) private investorRepository: InvestorRepositoryInterface,
+    @inject(TransactionRepositoryType) private transactionRepository: TransactionRepositoryInterface
   ) { }
 
-  async getList(): Promise<InvestorResult[]> {
-    const investors = await getConnection().getMongoRepository(Investor).find();
+  async getList(queryParams: any): Promise<any> {
+    const investorParams = {
+      country: queryParams.country || null,
+      kycStatus: queryParams.kycStatus || null,
+      search: queryParams.search || null
+    };
 
-    /* istanbul ignore next */
-    if (!investors) {
-      throw new NotFound('Investors not found');
-    }
+    const pagination = {
+      page: queryParams.page || 0,
+      limit: queryParams.limit || 50
+    };
 
-    return transformers.transformInvestorList(investors);
+    const sort = {
+      sort: queryParams.sort || null,
+      desc: queryParams.desc === 'true'
+    };
+
+    const count = await this.investorRepository.getAllCountByParams(investorParams);
+
+    const investors = await this.investorRepository.getAllByParams(
+      investorParams,
+      pagination,
+      sort
+    );
+
+    const data = investors ? transformers.transformInvestorList(investors) : [];
+
+    return {
+      page: pagination.page,
+      count: count,
+      limit: pagination.limit,
+      data: data
+    };
   }
 
   async getOne(investorId: any): Promise<InvestorResult> {
-    const investor = await getConnection().getMongoRepository(Investor).findOne(
-      new ObjectID.createFromHexString(investorId)
-    );
+    const investor = await this.investorRepository.getOne(investorId);
 
     if (!investor) {
       throw new NotFound('Investor not found');
     }
 
-    return transformers.transformInvestor(investor);
+    const transactionsOut = investor.ethWallet ? await this.transactionRepository.getAllWithParams({
+      type: 'ETH',
+      walletAddress: investor.ethWallet.address,
+      direction: 'OUT'
+    }) : [];
+
+    const transactionsIn = investor.ethWallet ? await this.transactionRepository.getAllWithParams({
+      type: 'ETH',
+      walletAddress: investor.ethWallet.address,
+      direction: 'IN'
+    }) : [];
+
+    return transformers.transformInvestor(investor, transactionsOut, transactionsIn);
   }
 
   async update(investorId: any, inputInvestor: InputInvestor): Promise<InvestorResult> {
-    const investor = await getConnection().getMongoRepository(Investor).findOne(
-      new ObjectID.createFromHexString(investorId)
-    );
+    const investor = await this.investorRepository.getOne(investorId);
 
     if (!investor) {
       throw new NotFound('Investor not found');
     }
+
+    const transactionsOut = investor.ethWallet ? await this.transactionRepository.getAllWithParams({
+      type: 'ETH',
+      walletAddress: investor.ethWallet.address,
+      direction: 'OUT'
+    }) : [];
+
+    const transactionsIn = investor.ethWallet ? await this.transactionRepository.getAllWithParams({
+      type: 'ETH',
+      walletAddress: investor.ethWallet.address,
+      direction: 'IN'
+    }) : [];
 
     const logger = this.logger.sub({ email: investor.email }, '[update] ');
 
@@ -88,13 +137,11 @@ export class InvestorService implements InvestorServiceInterface {
       });
     }
 
-    return transformers.transformInvestor(investor);
+    return transformers.transformInvestor(investor, transactionsOut, transactionsIn);
   }
 
   async accessUpdate(investorId: string, method: string): Promise<AccessUpdateResult> {
-    const investor = await getConnection().getMongoRepository(Investor).findOne(
-      new ObjectID.createFromHexString(investorId)
-    );
+    const investor = await this.investorRepository.getOne(investorId);
 
     if (!investor) {
       throw new NotFound('Investor not found');

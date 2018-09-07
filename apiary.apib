@@ -9,9 +9,19 @@ initiates login and generates JWT token. Next this token must be verified using 
 
 # Group Investors
 
-## Investors [/investors]
+## Investors [/investors{?kycStatus,country,search,page,limit,sort,desc}]
 
 ### Get list [GET]
+
++ Parameters
+
+    + kycStatus (optional, string)
+    + country (optional, string)
+    + search (optional, string) - search by email, firstName, lastName
+    + page (optional, number)
+    + limit (optional, number) - default value 50 if limit is not exist
+    + sort (optional, string) - required if query parameter `desc` is presented
+    + desc (optional, boolean)
 
 + Request
 
@@ -23,7 +33,10 @@ initiates login and generates JWT token. Next this token must be verified using 
 + Response 200 (application/json)
 
         {
-            [
+            page: 0,
+            count: 2,
+            limit: 50,
+            data: [
                 {
                     "investorId": "5b25c7fe5adfac08e2fefa75",
                     "email": "existing@test.com",
@@ -176,7 +189,10 @@ initiates login and generates JWT token. Next this token must be verified using 
 + Response 200 (aplication/json)
 
         {
-            [
+            page: 0,
+            count: 2,
+            limit: 50,
+            data: [
                 {
                     "id": "5b142a4ab869d208143cbc97",
                     "transactionHash": "0x06ad42c56d54405dd6fa89ccd2f7eb3a928a8ae444f12515a33bf7a56779ac75",

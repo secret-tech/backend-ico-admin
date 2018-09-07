@@ -58,6 +58,9 @@ export class Investor implements Object {
   @Column()
   source: any;
 
+  @Column()
+  scope: string;
+
   @Column(type => Verification)
   verification: Verification;
 

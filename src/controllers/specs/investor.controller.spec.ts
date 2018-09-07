@@ -26,7 +26,7 @@ describe('Investor controller', () => {
 
       getRequest(factory.testApp(), '/investors').set('Authorization', `Bearer ${ token }`).end((err, res) => {
         expect(res.status).to.equal(200);
-        expect(res.body).to.deep.equal([
+        expect(res.body.data).to.deep.equal([
           {
             investorId: '59f075eda6cca00fbd486167',
             email: 'user1@user.com',
@@ -52,8 +52,8 @@ describe('Investor controller', () => {
             phone: '+79999999999',
             ethAddress: '0x6b78c67Bf14eEA09ce74e18A1f5Eb0D9403B4493',
             kycStatus: 'verified',
-            amountDeposited: 0,
-            amountInvested: 0
+            amountDeposited: 1,
+            amountInvested: 1
           },
           {
             investorId: '59f07e23b41f6373f64a8dc8',
@@ -91,8 +91,8 @@ describe('Investor controller', () => {
           phone: '+79999999999',
           ethAddress: '0x6b78c67Bf14eEA09ce74e18A1f5Eb0D9403B4493',
           kycStatus: 'verified',
-          amountDeposited: 0,
-          amountInvested: 0
+          amountDeposited: 1,
+          amountInvested: 1
         });
         done();
       });
@@ -143,8 +143,8 @@ describe('Investor controller', () => {
           phone: '+79998888888',
           ethAddress: '0x6b78c67Bf14eEA09ce74e18A1f5Eb0D9403B4493',
           kycStatus: 'verified',
-          amountDeposited: 0,
-          amountInvested: 0
+          amountDeposited: 1,
+          amountInvested: 1
         });
         done();
       });

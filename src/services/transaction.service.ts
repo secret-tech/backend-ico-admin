@@ -29,7 +29,7 @@ export class TransactionService implements TransactionServiceInterface {
 
     const count = await this.transactionRepository.getAllCountByParams(transactionParams);
 
-    const transactions = await this.transactionRepository.getAllByParams(
+    const transactions = await this.transactionRepository.getAllWithPagination(
       transactionParams,
       pagination,
       sort

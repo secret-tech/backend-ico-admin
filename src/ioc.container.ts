@@ -16,15 +16,20 @@ import {
   TransactionRepositoryInterface,
   TransactionRepositoryType
 } from './services/repositories/transaction.repository';
+import {
+  InvestorRepository,
+  InvestorRepositoryInterface,
+  InvestorRepositoryType
+} from './services/repositories/investor.repository';
 
 let container = new Container();
 
 // services
 container.bind<AuthClientInterface>(AuthClientType).to(AuthClient);
 container.bind<InvestorServiceInterface>(InvestorServiceType).to(InvestorService);
+container.bind<InvestorRepositoryInterface>(InvestorRepositoryType).to(InvestorRepository).inSingletonScope();
 container.bind<TransactionServiceInterface>(TransactionServiceType).to(TransactionService);
 container.bind<TransactionRepositoryInterface>(TransactionRepositoryType).to(TransactionRepository).inSingletonScope();
-
 
 // middlewares
 const auth = new Auth(container.get<AuthClientInterface>(AuthClientType));

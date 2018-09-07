@@ -25,7 +25,9 @@ const {
   AUTH_BASE_URL,
   MONGO_URL,
   ACCESS_LOG,
-  SERVICE_NAME
+  SERVICE_NAME,
+  ICO_SC_ADDRESS,
+  TOKEN_ADDRESS
 } = process.env;
 
 /* istanbul ignore next */
@@ -60,6 +62,14 @@ export default {
   auth: {
     baseUrl: AUTH_BASE_URL || 'http://auth:3000',
     token: AUTH_JWT
+  },
+  contracts: {
+    ico: {
+      address: ICO_SC_ADDRESS
+    },
+    token: {
+      address: TOKEN_ADDRESS
+    }
   },
   typeOrm: {
     type: 'mongodb',
