@@ -1,10 +1,12 @@
 import { Investor } from '../entities/investor';
+import config from '../config';
+import { Transaction } from '../entities/transaction';
 
-export function transformInvestorList(investors: Investor[]): InvestorResult[] {
+export function transformInvestorList(investors: any): InvestorResult[] {
   return investors.map(i => ({
-    investorId: i.id.toHexString(),
+    investorId: i._id.toHexString(),
     email: i.email,
-    name: i.name,
+    name: `${i.firstName} ${i.lastName}`,
     firstName: i.firstName,
     lastName: i.lastName,
     country: i.country,
@@ -12,12 +14,12 @@ export function transformInvestorList(investors: Investor[]): InvestorResult[] {
     phone: i.phone,
     ethAddress: i.ethWallet ? i.ethWallet.address : null,
     kycStatus: i.kycStatus,
-    amountDeposited: 0,
-    amountInvested: 0
+    amountDeposited: i.transactions_in.reduce((sum, tx) => sum + Number(tx.ethAmount), 0),
+    amountInvested: i.transactions_out.reduce((sum, tx) => (tx.to === config.contracts.ico.address ? sum + Number(tx.ethAmount) : sum), 0)
   }));
 }
 
-export function transformInvestor(investor: Investor): InvestorResult {
+export function transformInvestor(investor: Investor, transactionsOut: any, transactionsIn: any): InvestorResult {
   return {
     email: investor.email,
     name: investor.name,
@@ -28,8 +30,8 @@ export function transformInvestor(investor: Investor): InvestorResult {
     phone: investor.phone,
     ethAddress: investor.ethWallet ? investor.ethWallet.address : null,
     kycStatus: investor.kycStatus,
-    amountDeposited: 0,
-    amountInvested: 0
+    amountDeposited: transactionsIn.reduce((sum, tx) => sum + Number(tx.ethAmount), 0),
+    amountInvested: transactionsOut.reduce((sum, tx) => (tx.to === config.contracts.ico.address ? sum + Number(tx.ethAmount) : sum), 0)
   };
 }
 

@@ -31,7 +31,7 @@ module .exports = [
     timestamp: 1509294446,
     blockNumber: 1965177,
     from: '0x6b78c67Bf14eEA09ce74e18A1f5Eb0D9403B4493',
-    to: '0x6b78c67Bf14eEA09ce74e18A1f5Eb0D9403B4492',
+    to: '0x7672210729e053B2462D39CF3746A5d19B405aAD',
     ethAmount: '1',
     tokenAmount: '0',
     status: 'confirmed',

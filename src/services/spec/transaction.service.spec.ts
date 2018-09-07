@@ -96,15 +96,6 @@ describe('Transaction Service', () => {
         timestamp: 1509294446,
       },
       {
-        id: '5b5042ab44f9c60012eb8612',
-        transactionHash: '0x06ad42c56d54405dd6fa89ccd2f7eb3a928a8ae444f12515a33bf7a56779ac77',
-        status: 'confirmed',
-        type: 'ETH',
-        amount: 1,
-        direction: 'IN',
-        timestamp: 1509294446
-      },
-      {
         id: '5b5042ab44f9c60012eb8613',
         transactionHash: '0x06ad42c56d54405dd6fa89ccd2f7eb3a928a8ae444f12515a33bf7a56779ac78',
         status: 'confirmed',
@@ -124,15 +115,6 @@ describe('Transaction Service', () => {
     const transactions = await transactionService.getList(params);
 
     expect(transactions.data).to.deep.equal([
-      {
-        id: '5b5042ab44f9c60012eb8612',
-        transactionHash: '0x06ad42c56d54405dd6fa89ccd2f7eb3a928a8ae444f12515a33bf7a56779ac77',
-        status: 'confirmed',
-        type: 'ETH',
-        amount: 1,
-        direction: 'IN',
-        timestamp: 1509294446
-      },
       {
         id: '5b5042ab44f9c60012eb8613',
         transactionHash: '0x06ad42c56d54405dd6fa89ccd2f7eb3a928a8ae444f12515a33bf7a56779ac78',

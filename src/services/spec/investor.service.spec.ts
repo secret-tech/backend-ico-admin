@@ -20,9 +20,9 @@ const investorService = container.get<InvestorServiceInterface>(InvestorServiceT
 
 describe('Investor Service', () => {
   it('should get list of Investors',  async() => {
-    const investors = await investorService.getList();
+    const result = await investorService.getList({});
 
-    expect(investors).to.deep.equal([
+    expect(result.data).to.deep.equal([
       {
         investorId: '59f075eda6cca00fbd486167',
         email: 'user1@user.com',
@@ -48,8 +48,8 @@ describe('Investor Service', () => {
         phone: '+79999999999',
         ethAddress: '0x6b78c67Bf14eEA09ce74e18A1f5Eb0D9403B4493',
         kycStatus: 'verified',
-        amountDeposited: 0,
-        amountInvested: 0
+        amountDeposited: 1,
+        amountInvested: 1
       },
       {
         investorId: '59f07e23b41f6373f64a8dc8',
@@ -81,8 +81,8 @@ describe('Investor Service', () => {
       phone: '+79999999999',
       ethAddress: '0x6b78c67Bf14eEA09ce74e18A1f5Eb0D9403B4493',
       kycStatus: 'verified',
-      amountDeposited: 0,
-      amountInvested: 0
+      amountDeposited: 1,
+      amountInvested: 1
     });
   });
 
@@ -114,8 +114,8 @@ describe('Investor Service', () => {
       phone: '+79998888888',
       ethAddress: '0x6b78c67Bf14eEA09ce74e18A1f5Eb0D9403B4493',
       kycStatus: 'verified',
-      amountDeposited: 0,
-      amountInvested: 0
+      amountDeposited: 1,
+      amountInvested: 1
     });
   });
 
@@ -130,7 +130,6 @@ describe('Investor Service', () => {
       newPassword: 'newPassword123',
       kycStatus: 'verified'
     };
-    const tenantToken = 'verified_token';
 
     expect(investorService.update(investorId, inputInvestor)).to.be.rejectedWith(NotFound);
   });
@@ -184,6 +183,167 @@ describe('Investor Service', () => {
       kycStatus: 'not_verified',
       amountDeposited: 0,
       amountInvested: 0
+    });
+  });
+
+  it('should get investors with verified kycStatus', async() => {
+    const query = {
+      kycStatus: 'verified'
+    };
+
+    const result = await investorService.getList(query);
+
+    expect(result).to.deep.equal({
+      page: 0,
+      count: 2,
+      limit: 50,
+      data: [
+        {
+          investorId: '59f075eda6cca00fbd486167',
+          email: 'user1@user.com',
+          name: 'John Smith',
+          firstName: 'John',
+          lastName: 'Smith',
+          country: 'Russia',
+          dob: '1990-07-20',
+          phone: '+79999999999',
+          ethAddress: '0x6b78c67Bf14eEA09ce74e18A1f5Eb0D9403B4492',
+          kycStatus: 'verified',
+          amountDeposited: 0,
+          amountInvested: 0
+        },
+        {
+          investorId: '59f07e23b41f6373f64a8dcb',
+          email: 'user2@user.com',
+          name: 'Vincent Vega',
+          firstName: 'Vincent',
+          lastName: 'Vega',
+          country: 'England',
+          dob: '1990-07-20',
+          phone: '+79999999999',
+          ethAddress: '0x6b78c67Bf14eEA09ce74e18A1f5Eb0D9403B4493',
+          kycStatus: 'verified',
+          amountDeposited: 1,
+          amountInvested: 1
+        }
+      ]
+    });
+  });
+
+  it('should get investors with search query', async() => {
+    const query = {
+      search: 'user.com'
+    };
+
+    const result = await investorService.getList(query);
+
+    expect(result).to.deep.equal({
+      page: 0,
+      count: 3,
+      limit: 50,
+      data: [
+        {
+          investorId: '59f075eda6cca00fbd486167',
+          email: 'user1@user.com',
+          name: 'John Smith',
+          firstName: 'John',
+          lastName: 'Smith',
+          country: 'Russia',
+          dob: '1990-07-20',
+          phone: '+79999999999',
+          ethAddress: '0x6b78c67Bf14eEA09ce74e18A1f5Eb0D9403B4492',
+          kycStatus: 'verified',
+          amountDeposited: 0,
+          amountInvested: 0
+        },
+        {
+          investorId: '59f07e23b41f6373f64a8dcb',
+          email: 'user2@user.com',
+          name: 'Vincent Vega',
+          firstName: 'Vincent',
+          lastName: 'Vega',
+          country: 'England',
+          dob: '1990-07-20',
+          phone: '+79999999999',
+          ethAddress: '0x6b78c67Bf14eEA09ce74e18A1f5Eb0D9403B4493',
+          kycStatus: 'verified',
+          amountDeposited: 1,
+          amountInvested: 1
+        },
+        {
+          investorId: '59f07e23b41f6373f64a8dc8',
+          email: 'user3@user.com',
+          name: 'Ivan Ivanov',
+          firstName: 'Ivan',
+          lastName: 'Ivanov',
+          country: 'England',
+          dob: '1990-05-23',
+          phone: '+79999999999',
+          ethAddress: null,
+          kycStatus: 'not_verified',
+          amountDeposited: 0,
+          amountInvested: 0
+        }
+      ]
+    });
+  });
+
+  it('should get empty result data with wring search query', async() => {
+    const query = {
+      search: 'wrong'
+    };
+
+    const result = await investorService.getList(query);
+
+    expect(result).to.deep.equal({
+      page: 0,
+      count: 0,
+      limit: 50,
+      data: []
+    });
+  });
+
+  it('should get investors with country query', async() => {
+    const query = {
+      country: 'England'
+    };
+
+    const result = await investorService.getList(query);
+
+    expect(result).to.deep.equal({
+      page: 0,
+      count: 2,
+      limit: 50,
+      data: [
+        {
+          investorId: '59f07e23b41f6373f64a8dcb',
+          email: 'user2@user.com',
+          name: 'Vincent Vega',
+          firstName: 'Vincent',
+          lastName: 'Vega',
+          country: 'England',
+          dob: '1990-07-20',
+          phone: '+79999999999',
+          ethAddress: '0x6b78c67Bf14eEA09ce74e18A1f5Eb0D9403B4493',
+          kycStatus: 'verified',
+          amountDeposited: 1,
+          amountInvested: 1
+        },
+        {
+          investorId: '59f07e23b41f6373f64a8dc8',
+          email: 'user3@user.com',
+          name: 'Ivan Ivanov',
+          firstName: 'Ivan',
+          lastName: 'Ivanov',
+          country: 'England',
+          dob: '1990-05-23',
+          phone: '+79999999999',
+          ethAddress: null,
+          kycStatus: 'not_verified',
+          amountDeposited: 0,
+          amountInvested: 0
+        }
+      ]
     });
   });
 });

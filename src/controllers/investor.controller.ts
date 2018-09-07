@@ -17,7 +17,7 @@ export class InvestorController {
     '/'
   )
   async getList(req: Request, res: Response): Promise<void> {
-    res.json(await this.investorService.getList());
+    res.json(await this.investorService.getList(req.query));
   }
 
   @httpGet(
